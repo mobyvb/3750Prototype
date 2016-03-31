@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>3750 Demo</title>
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      #leftimage, #rightimage {
+        position: absolute;
+        height: 100%;
+        width: 50%;
+      }
+
+      #leftimage {
+      }
+      #rightimage {
+        left: 50%;
+      }
+
+      #controloverlay {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+      .control {
+        position: absolute;
+      }
+      #forward, #backward, #help, #interact {
+        height: 25%;
+        width: 50%;
+        left: 25%;
+        background-color: green;
+      }
+      #backward {
+        bottom: 0;
+      }
+      #interact {
+        top: 25%;
+        background-color: red;
+      }
+      #help {
+        top: 50%;
+        background-color: white;
+      }
+      #left, #right {
+        height: 50%;
+        width: 25%;
+        background-color: green;
+        top: 25%;
+      }
+      #right {
+        right: 0;
+      }
+      #showerror, #showmessage {
+        width: 25%;
+        height: 25%;
+        background-color: blue;
+        position: absolute;
+      }
+      #showerror {
+        right: 0;
+      }
+
+      .popup {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+        display: none;
+      }
+
+      .popup-left {
+        left: 5%;
+      }
+      .popup-right {
+        right: 5%;
+      }
+      .popup-left, .popup-right {
+        background-color: rgba(255, 255, 255, 0.7);
+        position: absolute;
+        border-radius: 50px;
+        width: 40%;
+        height: 90%;
+        top: 5%;
+        font-family: sans-serif;
+        font-size: 17px;
+        text-align: center;
+      }
+      .popup-left p, .popup-right p {
+        margin: 20px;
+
+      }
+      .popup-left ul, .popup-right ul {
+        text-align: left;
+      }
+    </style>
+
+    <script src='jquery.min.js'></script>
+  </head>
+  <body>
+    <div id='leftimage'></div>
+    <div id='rightimage'></div>
+
+    <div id='controloverlay'>
+      <div class='control' id='forward'></div>
+      <div class='control' id='backward'></div>
+      <div class='control' id='left'></div>
+      <div class='control' id='right'></div>
+      <div class='control' id='help'></div>
+      <div class='control' id='interact'></div>
+      <div class='control' id='showerror'></div>
+      <div class='control' id='showmessage'></div>
+    </div>
+
+    <div id='error' class='popup'>
+      <div class='popup-right'>
+        <h1>Message</h1>
+        <p>Sorry, you can't do that<br>(say "close" to close).</p>
+      </div>
+      <div class='popup-left'>
+        <h1>Message</h1>
+        <p>Sorry, you can't do that<br>(say "close" to close).</p>
+      </div>
+    </div>
+
+    <div id='message' class='popup'>
+      <div class='popup-right'>
+        <h1>Message</h1>
+        <p>This door is locked.<br>(say "close" to close).</p>
+      </div>
+      <div class='popup-left'>
+        <h1>Message</h1>
+        <p>This door is locked.<br>(say "close" to close).</p>
+      </div>
+    </div>
+
+    <div id='helppopup' class='popup'>
+      <div class='popup-right'>
+        <h1>Help</h1>
+        <ul>
+          <li>Say "help" to bring up this menu</li>
+          <li>Say "forward" to go forward</li>
+          <li>Say "left" or "right" to turn</li>
+          <li>Say "turn around" or "back" to turn 180 degrees</li>
+          <li>Say "&lt;action&gt; &lt;item&gt;" to interact with an item. Example: "open door"</li>
+          <li>Say "exit" to exit the simulation</li>
+        </ul>
+        <p>say "close" to close this popup</p>
+      </div>
+      <div class='popup-left'>
+        <h1>Help</h1>
+        <ul>
+          <li>Say "help" to bring up this menu</li>
+          <li>Say "forward" to go forward</li>
+          <li>Say "left" or "right" to turn</li>
+          <li>Say "turn around" or "back" to turn 180 degrees</li>
+          <li>Say "&lt;action&gt; &lt;item&gt;" to interact with an item. Example: "open door"</li>
+          <li>Say "exit" to exit the simulation</li>
+        </ul>
+        <p>say "close" to close this popup</p>
+      </div>
+    </div>
+
+    <script>
+      var playerInfo = {
+        x: 0,
+        y: 0,
+        direction: 'n'
+      }
+
+      function moveForward() {
+
+      }
+
+      function turn180() {
+
+      }
+
+      function turnRight() {
+
+      }
+
+      function turnLeft() {
+
+      }
+
+      function interact() {
+
+      }
+
+      console.log('hello');
+      $('#forward').click(function() {
+        moveForward();
+      });
+      $('#backward').click(function() {
+        turn180();
+      });
+      $('#left').click(function() {
+        turnLeft();
+      });
+      $('#right').click(function() {
+        turnRight();
+      });
+      $('#interact').click(function() {
+        interact();
+      });
+      $('#help').click(function() {
+        $('#helppopup').show();
+      });
+      $('#showerror').click(function() {
+        $('#error').show();
+      });
+      $('#showmessage').click(function() {
+        $('#message').show();
+      });
+      $('#message').click(function(e) {
+        $('#message').hide();
+      });
+      $('#error').click(function(e) {
+        $('#error').hide();
+      });
+      $('#helppopup').click(function(e) {
+        $('#helppopup').hide();
+      });
+    </script>
+  </body>
+</html>
