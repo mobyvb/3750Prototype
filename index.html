@@ -60,13 +60,16 @@
       #right {
         right: 0;
       }
-      #showerror, #showmessage {
+      #showerror, #showmessage, #toggle3d {
         width: 25%;
         height: 25%;
         position: absolute;
       }
       #showerror {
         right: 0;
+      }
+      #toggle3d {
+        bottom: 0;
       }
 
       .popup {
@@ -104,6 +107,7 @@
     </style>
 
     <script src='jquery.min.js'></script>
+    <script src='validspots.js'></script>
   </head>
   <body>
     <div id='leftimage'></div>
@@ -118,6 +122,7 @@
       <div class='control' id='interact'></div>
       <div class='control' id='showerror'></div>
       <div class='control' id='showmessage'></div>
+      <div class='control' id='toggle3d'></div>
     </div>
 
     <div id='error' class='popup'>
@@ -171,31 +176,33 @@
 
     <script>
       var playerInfo = {};
+      var threed = true;
 
       validateAndMove(0, 0, 'e');
 
       function validateAndMove(x, y, direction) {
         // image naming convention:
         // x<x coord>y<y coord>d<cardinal direction>s<eye (r or l)>.jpg
-        var prefix = 'https://www.dropbox.com/s/adce3kpsc4bgocc/'
-        var suffix = '?raw=1';
-        var imageStr = '';
-        imageStr += prefix + 'x' + x + 'y' + y + 'd' + direction;
-        var right = imageStr + 'sr.jpg' + suffix;
-        var left = imageStr + 'sl.jpg' + suffix;
-
-        $.ajax({
-          url: right,
-          dataType: 'jsonp',
-          complete: function() {
-            console.log('success');
-            $('#leftimage').css('background-image', 'url(' + left + ')');
-            $('#rightimage').css('background-image', 'url(' + right + ')');
-          },
-          error: function() {
-            console.log('error');
+        if (validSpots[x][y]) {
+          var prefix = 'http://3750demo.s3-website-us-east-1.amazonaws.com/'
+          var suffix = '';
+          var imageStr = '';
+          imageStr += prefix + 'x' + x + 'y' + y + 'd' + direction;
+          var right = imageStr + 'sr.jpg' + suffix;
+          var left = right;
+          if (threed) {
+            left = imageStr + 'sl.jpg' + suffix;
           }
-        });
+
+          $('#leftimage').css('background-image', 'url(' + left + ')');
+          $('#rightimage').css('background-image', 'url(' + right + ')');
+
+          playerInfo.x = x;
+          playerInfo.y = y;
+          playerInfo.direction = direction;
+        } else {
+          $('#error').show();
+        }
       }
 
       function moveForward() {
@@ -215,22 +222,57 @@
       }
 
       function turn180() {
-
+        var currX = playerInfo.x;
+        var currY = playerInfo.y;
+        var currDirection = playerInfo.direction;
+        if (currDirection === 'n') {
+          currDirection = 's';
+        } else if (currDirection === 's') {
+          currDirection = 'n';
+        } else if (currDirection === 'e') {
+          currDirection = 'w';
+        } else {
+          currDirection = 'e';
+        }
+        validateAndMove(currX, currY, currDirection);
       }
 
       function turnRight() {
-
+        var currX = playerInfo.x;
+        var currY = playerInfo.y;
+        var currDirection = playerInfo.direction;
+        if (currDirection === 'n') {
+          currDirection = 'e';
+        } else if (currDirection === 's') {
+          currDirection = 'w';
+        } else if (currDirection === 'e') {
+          currDirection = 's';
+        } else {
+          currDirection = 'n';
+        }
+        validateAndMove(currX, currY, currDirection);
       }
 
       function turnLeft() {
-
+        var currX = playerInfo.x;
+        var currY = playerInfo.y;
+        var currDirection = playerInfo.direction;
+        if (currDirection === 'n') {
+          currDirection = 'w';
+        } else if (currDirection === 's') {
+          currDirection = 'e';
+        } else if (currDirection === 'e') {
+          currDirection = 'n';
+        } else {
+          currDirection = 's';
+        }
+        validateAndMove(currX, currY, currDirection);
       }
 
       function interact() {
 
       }
 
-      console.log('hello');
       $('#forward').click(function() {
         moveForward();
       });
@@ -254,6 +296,10 @@
       });
       $('#showmessage').click(function() {
         $('#message').show();
+      });
+      $('#toggle3d').click(function() {
+        threed = !threed;
+        validateAndMove(playerInfo.x, playerInfo.y, playerInfo.direction);
       });
       $('#message').click(function(e) {
         $('#message').hide();
