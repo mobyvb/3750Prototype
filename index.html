@@ -177,6 +177,7 @@
     <script>
       var playerInfo = {};
       var threed = true;
+      var fullscreenRequested = false;
 
       validateAndMove(0, 0, 'e');
 
@@ -289,6 +290,17 @@
         interact();
       });
       $('#help').click(function() {
+        if (!fullscreenRequested) {
+          if (document.body.webkitRequestFullscreen) {
+            document.body.requestFullscreen = document.body.webkitRequestFullscreen;
+          } else if (document.body.mozRequestFullScreen) { // mozilla just had to be special with its capitalization
+            document.body.requestFullscreen = document.body.mozRequestFullScreen;
+          } else if (document.body.msRequestFullscreen) {
+            document.body.requestFullscreen = document.body.msRequestFullscreen;
+          }
+          document.body.requestFullscreen();
+          fullscreenRequested = true;
+        }
         $('#helppopup').show();
       });
       $('#showerror').click(function() {
