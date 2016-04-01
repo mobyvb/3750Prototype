@@ -1,3 +1,5 @@
+<!--I know I'm using a lot of bad practices in this code, but I needed something quick and dirty for this project-->
+<!--Plus this app is not resource-intensive-->
 <!DOCTYPE html>
 <html>
   <head>
@@ -16,11 +18,14 @@
         position: absolute;
         height: 100%;
         width: 50%;
+        background-position: center;
       }
 
       #leftimage {
+        border-right: 1px solid black;
       }
       #rightimage {
+        border-left: 1px solid black;
         left: 50%;
       }
 
@@ -37,23 +42,19 @@
         height: 25%;
         width: 50%;
         left: 25%;
-        background-color: green;
       }
       #backward {
         bottom: 0;
       }
       #interact {
         top: 25%;
-        background-color: red;
       }
       #help {
         top: 50%;
-        background-color: white;
       }
       #left, #right {
         height: 50%;
         width: 25%;
-        background-color: green;
         top: 25%;
       }
       #right {
@@ -62,7 +63,6 @@
       #showerror, #showmessage {
         width: 25%;
         height: 25%;
-        background-color: blue;
         position: absolute;
       }
       #showerror {
@@ -170,14 +170,48 @@
     </div>
 
     <script>
-      var playerInfo = {
-        x: 0,
-        y: 0,
-        direction: 'n'
+      var playerInfo = {};
+
+      validateAndMove(0, 0, 'e');
+
+      function validateAndMove(x, y, direction) {
+        // image naming convention:
+        // x<x coord>y<y coord>d<cardinal direction>s<eye (r or l)>.jpg
+        var prefix = 'https://www.dropbox.com/s/adce3kpsc4bgocc/'
+        var suffix = '?raw=1';
+        var imageStr = '';
+        imageStr += prefix + 'x' + x + 'y' + y + 'd' + direction;
+        var right = imageStr + 'sr.jpg' + suffix;
+        var left = imageStr + 'sl.jpg' + suffix;
+
+        $.ajax({
+          url: right,
+          dataType: 'jsonp',
+          complete: function() {
+            console.log('success');
+            $('#leftimage').css('background-image', 'url(' + left + ')');
+            $('#rightimage').css('background-image', 'url(' + right + ')');
+          },
+          error: function() {
+            console.log('error');
+          }
+        });
       }
 
       function moveForward() {
-
+        var currX = playerInfo.x;
+        var currY = playerInfo.y;
+        var currDirection = playerInfo.direction;
+        if (currDirection === 'n') {
+          currY += 1;
+        } else if (currDirection === 's') {
+          currY -= 1;
+        } else if (currDirection === 'e') {
+          currX += 1;
+        } else {
+          currX -= 1;
+        }
+        validateAndMove(currX, currY, currDirection);
       }
 
       function turn180() {
